@@ -55,10 +55,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def create_message(self, data):
         
-        get_room = Room.objects.get(room_name=data['room_name'])
-        
+        get_room = Room.objects.get(room_name=data['room_name'])        
+        new_message = Message.objects.create(room = get_room, message=data['message'], sender=data["sender"])
+        return new_message
+
         # if the same user sends an existing message again then it will not be sent
         # only new messages will be sent
-        if not Message.objects.filter(message=data['message'], sender=data["sender"]).exists():
-            new_message = Message.objects.create(room = get_room,
-            message=data['message'], sender=data["sender"])
+        # if  Message.objects.filter(message=data['message'], sender=data["sender"]).exists():
+        #     new_message = Message.objects.create(room = get_room,
+        #     message=data['message'], sender=data["sender"])

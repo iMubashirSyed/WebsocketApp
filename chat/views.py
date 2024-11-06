@@ -59,9 +59,8 @@ def RoomView(request, room_name, username):
         return render(request, 'room.html', context)
     else:
         messages.error(request, "Room does not exist.")
-        return redirect('home')  # Redirect to home or another appropriate page
-
-
+        return redirect('home')  
+    
 @login_required(login_url='login')
 def create_room(request):
     if request.method == 'POST':
@@ -70,7 +69,8 @@ def create_room(request):
         
         if Room.objects.filter(room_name=room_name).exists():
             messages.info(request,"Room already exists")
-        
+            return redirect('home')
+
         Room.objects.create(room_name=room_name)
         return redirect('home')
     
